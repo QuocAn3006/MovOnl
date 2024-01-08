@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Image from '../components/Image';
 import { Icon } from '@iconify/react';
+import Safe from 'react-safe';
 
 const MoviePage = () => {
 	const { id } = useParams();
@@ -309,14 +310,25 @@ const MoviePage = () => {
 			></div>
 			<script>
 				{`
+				
 				(function() { // DON'T EDIT BELOW THIS LINE
 					var d = document, s = d.createElement('script');
-					s.src = 'https://movonl.disqus.com/embed.js';
+					s.src = 'https://movie-online-1.disqus.com/embed.js';
 					s.setAttribute('data-timestamp', +new Date());
 					(d.head || d.body).appendChild(s);
 					})();
 				`}
 			</script>
+			<Safe.script>
+				{(function () {
+					// DON'T EDIT BELOW THIS LINE
+					var d = document,
+						s = d.createElement('script');
+					s.src = 'https://movie-online-1.disqus.com/embed.js';
+					s.setAttribute('data-timestamp', +new Date());
+					(d.head || d.body).appendChild(s);
+				})()}
+			</Safe.script>
 		</>
 	);
 };
