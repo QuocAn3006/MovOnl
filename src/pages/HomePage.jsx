@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import MovieCarousel from '../components/movies/MovieCarousel';
 import MovieCard from '../components/movies/MovieCard';
 import { Icon } from '@iconify/react';
+
 const HomePage = () => {
 	const [movies, setMovies] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +57,7 @@ const HomePage = () => {
 				</div>
 			</div>
 
-			<ul className='flex mt-20 font-medium justify-center'>
+			<ul className='flex mt-20 font-medium justify-center cursor-pointer'>
 				{currentPage !== 1 && (
 					<div
 						onClick={() => handlePageChange(currentPage - 1)}

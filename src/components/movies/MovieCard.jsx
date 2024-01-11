@@ -1,18 +1,51 @@
 /* eslint-disable react/prop-types */
 import { useNavigate } from 'react-router-dom';
 import Image from '../Image';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavMovies, removeFavMovies } from '../../redux/slide/favMovieSlide';
+import { Icon } from '@iconify/react';
 
 const MovieCard = props => {
 	const { item, pathImage } = props;
+	const dispatch = useDispatch();
+	const favMovies = useSelector(state => state.favMovies.favMovies);
+
+	const isFavorite = favMovies.some(m => m.slug === item.slug);
+
 	const navigate = useNavigate();
 	const handleNavigate = id => {
 		navigate(`/movie/${id}`);
 	};
 
+	const handleFavorite = type => {
+		const movieData = {
+			slug: item.slug,
+			name: item.name,
+			thumb_url: pathImage + item.thumb_url
+		};
+		switch (type) {
+			case 'ADD':
+				return dispatch(addFavMovies({ favMovie: movieData }));
+
+			case 'REMOVE':
+				return dispatch(removeFavMovies({ favMovie: movieData }));
+
+			default:
+				break;
+		}
+	};
 	return (
 		<>
 			<div className='select-none group cursor-pointer'>
 				<div className='relative rounded-lg overflow-hidden'>
+					{isFavorite && (
+						<Icon
+							icon='ph:heart-fill'
+							className='absolute top-2.5 right-2.5 z-20'
+							color='red'
+							height={28}
+						/>
+					)}
 					<span className='absolute top-2.5 left-2.5 rounded z-20 px-2.5 py-0.5 text-xs text-black bg-primary font-bold'>
 						0/1
 					</span>
@@ -29,8 +62,11 @@ const MovieCard = props => {
 					<div className='absolute inset-0 bg-black/60 none flex-col items-center justify-center gap-4 text-sm font-bold opacity-0 group-hover:opacity-100 duration-300 text-center hidden md:flex'>
 						<button
 							className={`bg-primary text-black rounded-full w-36 px-6 py-2.5 -translate-y-3 group-hover:translate-y-0 duration-300`}
+							onClick={() =>
+								handleFavorite(isFavorite ? 'REMOVE' : 'ADD')
+							}
 						>
-							Yêu thích
+							{isFavorite ? 'Bỏ Thích' : 'Yêu Thích'}
 						</button>
 						<div
 							onClick={() => handleNavigate(item.slug)}

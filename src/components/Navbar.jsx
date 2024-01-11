@@ -131,7 +131,8 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const fetchGenres = async () => {
 		const res = await axios.get(`/the-loai`);
-		setGenresData(res.data);
+		const data = res.data?.filter(item => item.slug !== 'phim-18');
+		setGenresData(data);
 	};
 
 	const fetchCountry = async () => {
@@ -222,7 +223,7 @@ const Navbar = () => {
 					</span>
 				</div>
 
-				<div className='flex items-center gap-5'>
+				<div className='flex items-center gap-5 cursor-pointer'>
 					<abbr title='Tìm kiếm'>
 						<Icon
 							icon='iconamoon:search-bold'
@@ -231,7 +232,7 @@ const Navbar = () => {
 						/>
 					</abbr>
 
-					<div>
+					<div onClick={() => navigate('/favourite')}>
 						<abbr title='Yêu thích'>
 							<Icon
 								icon='mdi:heart-box'

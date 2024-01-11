@@ -1,6 +1,7 @@
 import HomePage from '../pages/HomePage';
 import NotFoundPage from '../pages/NotFoundPage';
 import MoviePage from '../pages/MoviePage';
+import FavouritePage from '../pages/FavouritePage';
 
 export const routes = [
 	{
@@ -11,6 +12,11 @@ export const routes = [
 	{
 		path: '/movie/:id',
 		page: MoviePage
+	},
+
+	{
+		path: '/favourite',
+		page: FavouritePage
 	},
 
 	{ path: '*', page: NotFoundPage }

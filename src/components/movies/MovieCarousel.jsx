@@ -47,9 +47,17 @@ const MovieCarousel = props => {
 												<span className='bg-white px-2.5 py-1 text-black'>
 													{item?.year}
 												</span>
-												{/* <span className='border-2 border-white px-2.5 py-0.5'>
-													{item?.quality}
-												</span> */}
+												<span className='border-2 border-white px-2.5 py-0.5'>
+													HD
+												</span>
+												<span className='flex item-center gap-2'>
+													<Icon
+														icon='grommet-icons:language'
+														className='text-primary'
+														height={16}
+													/>
+													Vietsub
+												</span>
 											</div>
 										</div>
 										<div

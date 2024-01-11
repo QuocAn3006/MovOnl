@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import Image from '../components/Image';
 import { Icon } from '@iconify/react';
 import Safe from 'react-safe';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavMovies, removeFavMovies } from '../redux/slide/favMovieSlide';
 
 const MoviePage = () => {
 	const { id } = useParams();
@@ -13,6 +15,9 @@ const MoviePage = () => {
 	const [selectedEpisode, setSelectedEpisode] = useState({});
 	const [serverType, setServerType] = useState('art-player');
 	const iframeRef = useRef(null);
+	const dispatch = useDispatch();
+	const favMovies = useSelector(state => state.favMovies.favMovies);
+
 	const fetchDetailMovie = async () => {
 		const res = await axios.get(`/phim/${id}`);
 		return res.data;
@@ -22,25 +27,41 @@ const MoviePage = () => {
 		queryFn: fetchDetailMovie
 	});
 	const { data: movieDetail } = queryMovieDetail;
+	const isFavorite = favMovies.some(m => m.slug === movieDetail?.movie?.slug);
+
+	const handleFavorite = type => {
+		const movieData = {
+			slug: movieDetail?.movie?.slug,
+			name: movieDetail?.movie?.name,
+			thumb_url: src
+		};
+		switch (type) {
+			case 'ADD':
+				return dispatch(addFavMovies({ favMovie: movieData }));
+
+			case 'REMOVE':
+				return dispatch(removeFavMovies({ favMovie: movieData }));
+
+			default:
+				break;
+		}
+	};
 
 	useEffect(() => {
-		setSrc(
-			movieDetail?.movie?.thumb_url
-				? movieDetail?.movie?.thumb_url
-				: movieDetail?.movie?.poster_url
-		);
+		fetchDetailMovie();
+	}, [id]);
+	useEffect(() => {
+		setSrc(movieDetail?.movie?.thumb_url);
 		if (
 			!['Tập 0', 'Trailer'].includes(
 				movieDetail?.movie?.episode_current
 			) &&
-			movieDetail?.episodes[0]?.server_data[0]?.name
+			movieDetail?.episodes[0]?.server_data[0].name
 		) {
 			setSelectedEpisode(movieDetail?.episodes[0]?.server_data[0]);
 		}
-	}, []);
-	useEffect(() => {
-		fetchDetailMovie();
-	}, [id]);
+	}, [movieDetail]);
+
 	useEffect(() => {
 		if (!iframeRef.current) return;
 		iframeRef.current.src += '';
@@ -194,12 +215,23 @@ const MoviePage = () => {
 										Trailer
 									</button>
 
-									<button className='bg-black/70 border-primary hover:bg-primary hover:text-black flex items-center gap-2 rounded-full border-2 px-5 py-2.5 duration-300'>
+									<button
+										onClick={() =>
+											handleFavorite(
+												isFavorite ? 'REMOVE' : 'ADD'
+											)
+										}
+										className='bg-black/70 border-primary hover:bg-primary hover:text-black flex items-center gap-2 rounded-full border-2 px-5 py-2.5 duration-300'
+									>
 										<Icon
-											icon={'solar:heart-linear'}
+											icon={
+												isFavorite
+													? 'ph:heart-break-fill'
+													: 'solar:heart-linear'
+											}
 											height={20}
 										/>
-										Yêu thích
+										{isFavorite ? 'Bỏ thích' : 'Yêu thích'}
 									</button>
 								</div>
 							</div>

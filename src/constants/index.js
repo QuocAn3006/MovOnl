@@ -32,4 +32,13 @@ export const movieTypes = [
 	{ title: 'Tìm kiếm', path: 'tim-kiem' }
 ];
 
-export const imageUrl = import.meta.env.IMAGE_CND_URL;
+export const socialShare = [
+	{
+		platform: 'Facebook',
+		icon: 'ri:facebook-fill',
+		color: '#1877f2',
+		baseHref: `https://www.facebook.com/dialog/share?app_id=${
+			import.meta.env.APP_FB_ID
+		}&href=`
+	}
+];
