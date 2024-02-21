@@ -28,7 +28,6 @@ const MoviePage = () => {
 	});
 	const { data: movieDetail } = queryMovieDetail;
 	const isFavorite = favMovies.some(m => m.slug === movieDetail?.movie?.slug);
-
 	const handleFavorite = type => {
 		const movieData = {
 			slug: movieDetail?.movie?.slug,
@@ -51,7 +50,11 @@ const MoviePage = () => {
 		fetchDetailMovie();
 	}, [id]);
 	useEffect(() => {
-		setSrc(movieDetail?.movie?.thumb_url);
+		setSrc(
+			'https://img.hiephanhthienha.com/uploads/movies/' +
+				movieDetail?.movie?.slug +
+				'-thumb.jpg'
+		);
 		if (
 			!['Tập 0', 'Trailer'].includes(
 				movieDetail?.movie?.episode_current
@@ -72,9 +75,11 @@ const MoviePage = () => {
 				className='bg-cover w-full aspect-video relative bg-center lg:max-h-[800px]'
 				style={{
 					backgroundImage: `url(${
-						movieDetail?.movie?.poster_url
-							? movieDetail?.movie?.poster_url
-							: movieDetail?.movie?.thumb_url
+						'https://img.hiephanhthienha.com/uploads/movies/' +
+						movieDetail?.movie?.slug +
+						'-poster.jpg'
+						// ? movieDetail?.movie?.poster_url
+						// : movieDetail?.movie?.thumb_url
 					})`
 				}}
 			>
