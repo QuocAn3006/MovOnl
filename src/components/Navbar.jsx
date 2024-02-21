@@ -106,7 +106,7 @@ const MobileMenu = props => {
 
 									{menuType === 'country' &&
 										// eslint-disable-next-line react/prop-types
-										country.map(item => (
+										country?.map(item => (
 											<li
 												key={item._id}
 												className='hover:text-primary duration-100'
@@ -179,7 +179,7 @@ const Navbar = () => {
 					<span className='relative group hover:text-primary cursor-pointer'>
 						Loại phim
 						<ul className='dropdown-menu grid-cols-2 '>
-							{movieTypes.map(item => (
+							{movieTypes?.map(item => (
 								<li
 									key={item.title}
 									className='hover:text-primary duration-100'
@@ -193,7 +193,7 @@ const Navbar = () => {
 					<span className='relative group hover:text-primary cursor-pointer'>
 						Thể loại
 						<ul className='dropdown-menu grid-cols-2 '>
-							{genresData.map(item => (
+							{genresData?.map(item => (
 								<li
 									key={item._id}
 									className='hover:text-primary duration-100'

@@ -50,7 +50,9 @@ const HomePage = () => {
 						<div key={item._id}>
 							<MovieCard
 								item={item}
-								pathImage={movies.pathImage}
+								pathImage={
+									'https://img.hiephanhthienha.com/uploads/movies/'
+								}
 							/>
 						</div>
 					))}
