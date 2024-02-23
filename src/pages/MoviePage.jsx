@@ -51,9 +51,10 @@ const MoviePage = () => {
 	}, [id]);
 	useEffect(() => {
 		setSrc(
-			'https://img.hiephanhthienha.com/uploads/movies/' +
-				movieDetail?.movie?.slug +
-				'-thumb.jpg'
+			movieDetail?.movie?.thumb_url ||
+				import.meta.env.VITE_CDN_IMAGE +
+					movieDetail?.movie?.slug +
+					'-thumb.jpg'
 		);
 		if (
 			!['Tập 0', 'Trailer'].includes(
@@ -75,11 +76,10 @@ const MoviePage = () => {
 				className='bg-cover w-full aspect-video relative bg-center lg:max-h-[800px]'
 				style={{
 					backgroundImage: `url(${
-						'https://img.hiephanhthienha.com/uploads/movies/' +
-						movieDetail?.movie?.slug +
-						'-poster.jpg'
-						// ? movieDetail?.movie?.poster_url
-						// : movieDetail?.movie?.thumb_url
+						movieDetail?.movie?.poster_url ||
+						import.meta.env.VITE_CDN_IMAGE +
+							movieDetail?.movie?.slug +
+							'-poster.jpg'
 					})`
 				}}
 			>

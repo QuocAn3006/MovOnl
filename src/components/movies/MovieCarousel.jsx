@@ -28,9 +28,9 @@ const MovieCarousel = props => {
 							style={{
 								backgroundImage: `url(${
 									// eslint-disable-next-line react/prop-types
-
-									'https://img.hiephanhthienha.com/uploads/movies/' +
-									item.thumb_url
+									movies?.pathImage + item.thumb_url ||
+									import.meta.env.VITE_CDN_IMAGE +
+										item.thumb_url
 								}
 							)`
 							}}
@@ -79,7 +79,8 @@ const MovieCarousel = props => {
 									</div>
 									<Image
 										src={`${
-											'https://img.hiephanhthienha.com/uploads/movies/' +
+											import.meta.env.VITE_CDN_IMAGE +
+											// 'https://img.hiephanhthienha.com/uploads/movies/' +
 											item.thumb_url
 										}`}
 										alt={item.origin_name}
