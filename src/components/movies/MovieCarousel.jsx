@@ -79,9 +79,10 @@ const MovieCarousel = props => {
 									</div>
 									<Image
 										src={`${
+											movies?.pathImage +
+												item.thumb_url ||
 											import.meta.env.VITE_CDN_IMAGE +
-											// 'https://img.hiephanhthienha.com/uploads/movies/' +
-											item.thumb_url
+												item.thumb_url
 										}`}
 										alt={item.origin_name}
 										className='hidden aspect-[2/3] w-full max-w-[320px] rounded-lg border-[14px] border-primary md:block'
