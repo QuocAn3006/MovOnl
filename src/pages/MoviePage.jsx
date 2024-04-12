@@ -8,14 +8,11 @@ import { Icon } from '@iconify/react';
 import Safe from 'react-safe';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavMovies, removeFavMovies } from '../redux/slide/favMovieSlide';
-import LoadingBar from 'react-top-loading-bar';
-
 const MoviePage = () => {
 	const { id } = useParams();
 	const [src, setSrc] = useState('');
 	const [selectedEpisode, setSelectedEpisode] = useState({});
 	const [serverType, setServerType] = useState('art-player');
-	const [progress, setProgress] = useState(0);
 
 	const iframeRef = useRef(null);
 	const dispatch = useDispatch();
@@ -23,18 +20,19 @@ const MoviePage = () => {
 
 	const fetchDetailMovie = async () => {
 		const res = await axios.get(`/phim/${id}`);
-		return res.data;
+		console.log(res?.data?.data);
+		return res?.data?.data;
 	};
 	const queryMovieDetail = useQuery({
 		queryKey: ['movieDetail'],
 		queryFn: fetchDetailMovie
 	});
 	const { data: movieDetail } = queryMovieDetail;
-	const isFavorite = favMovies.some(m => m.slug === movieDetail?.movie?.slug);
+	const isFavorite = favMovies.some(m => m.slug === movieDetail?.item?.slug);
 	const handleFavorite = type => {
 		const movieData = {
-			slug: movieDetail?.movie?.slug,
-			name: movieDetail?.movie?.name,
+			slug: movieDetail?.item?.slug,
+			name: movieDetail?.item?.name,
 			thumb_url: src
 		};
 		switch (type) {
@@ -50,26 +48,25 @@ const MoviePage = () => {
 	};
 
 	useEffect(() => {
-		setProgress(0);
 		fetchDetailMovie();
-		setProgress(100);
 	}, [id]);
 	useEffect(() => {
 		setSrc(
-			movieDetail?.movie?.thumb_url ||
-				import.meta.env.VITE_CDN_IMAGE +
-					movieDetail?.movie?.slug +
-					'-thumb.jpg'
+			`${
+				movieDetail?.seoOnPage?.image ||
+				import.meta.env.VITE_CDN_IMAGE + movieDetail?.item?.thumb_url
+			}`
 		);
 		if (
 			!['Tập 0', 'Trailer'].includes(
-				movieDetail?.movie?.episode_current
+				movieDetail?.item?.episode_current
 			) &&
-			movieDetail?.episodes[0]?.server_data[0].name
+			movieDetail?.item[0]?.server_data[0].name
 		) {
-			setSelectedEpisode(movieDetail?.episodes[0]?.server_data[0]);
+			setSelectedEpisode(movieDetail?.item?.episodes[0]?.server_data[0]);
 		}
 	}, [movieDetail]);
+	console.log(selectedEpisode);
 
 	useEffect(() => {
 		if (!iframeRef.current) return;
@@ -77,51 +74,48 @@ const MoviePage = () => {
 	}, [serverType]);
 	return (
 		<>
-			<LoadingBar
-				progress={progress}
-				height={3}
-				color='#e4d804'
-				onLoaderFinished={() => setProgress(0)}
-			></LoadingBar>
 			<div
 				className='bg-cover w-full aspect-video relative bg-center lg:max-h-[800px]'
 				style={{
 					backgroundImage: `url(${
-						movieDetail?.movie?.poster_url ||
+						movieDetail?.seoOnPage?.image ||
 						import.meta.env.VITE_CDN_IMAGE +
-							movieDetail?.movie?.slug +
-							'-poster.jpg'
+							movieDetail?.item?.thumb_url
 					})`
 				}}
 			>
 				<div className='inset-0 bg-black/90 px-4 pb-10 pt-24 flex items-center lg:absolute'>
 					<div className='w-full max-w-7xl mx-auto flex flex-col items-center gap-8 md:flex-row'>
 						<Image
-							src={src}
-							alt={movieDetail?.movie?.name}
+							src={`${
+								movieDetail?.seoOnPage?.image ||
+								import.meta.env.VITE_CDN_IMAGE +
+									movieDetail?.item?.thumb_url
+							}`}
+							alt={movieDetail?.item?.name}
 							className='aspect-[2/3] rounded w-full max-w-[300px]'
 						/>
 						<div className='w-full'>
 							<h2 className='text-4xl font-extrabold lg:text-5xl'>
-								{movieDetail?.movie?.name}
+								{movieDetail?.item?.name}
 							</h2>
 							<span className='text-primary font-bold'>
-								{movieDetail?.movie?.origin_name}
+								{movieDetail?.item?.origin_name}
 							</span>
 							<div className='font-medium flex flex-col gap-5 my-4 lg:flex-row lg:items-center'>
 								<div className='flex items-center gap-2 text-xs font-bold'>
 									<span className='bg-white px-2.5 py-1 text-black'>
-										{movieDetail?.movie?.episode_current !==
+										{movieDetail?.item?.episode_current !==
 										'Full'
 											? '1'
 											: 'Full'}
 									</span>
 									<span className='border-2 border-white px-2.5 py-0.5'>
-										{movieDetail?.movie?.quality}
+										{movieDetail?.item?.quality}
 									</span>
 								</div>
 								<ul className='flex items-center flex-wrap gap-x-2 cursor-pointer'>
-									{movieDetail?.movie?.category.map(
+									{movieDetail?.item?.category.map(
 										(g, idx) => (
 											<div
 												key={g.id}
@@ -129,7 +123,7 @@ const MoviePage = () => {
 											>
 												{g.name}
 												{idx + 1 !==
-												movieDetail?.movie?.category
+												movieDetail?.item?.category
 													? ','
 													: '.'}
 											</div>
@@ -144,7 +138,7 @@ const MoviePage = () => {
 										className='text-primary'
 										height={16}
 									/>
-									{movieDetail?.movie?.year}
+									{movieDetail?.item?.year}
 								</span>
 								<span className='flex items-center gap-2'>
 									<Icon
@@ -152,7 +146,7 @@ const MoviePage = () => {
 										className='text-primary'
 										height={16}
 									/>
-									{movieDetail?.movie?.time.replace(
+									{movieDetail?.item?.time.replace(
 										'undefined',
 										'???'
 									) || 'Đang cập nhật'}
@@ -163,7 +157,7 @@ const MoviePage = () => {
 										className='text-primary'
 										height={16}
 									/>
-									{movieDetail?.movie?.lang}
+									{movieDetail?.item?.lang}
 								</span>
 							</div>
 							<div className='flex items-center gap-5'>
@@ -173,18 +167,17 @@ const MoviePage = () => {
 										className='text-primary'
 										height={16}
 									/>
-									{movieDetail?.movie?.episode_current ===
+									{movieDetail?.item?.episode_current ===
 									'Full'
 										? '1'
-										: movieDetail?.movie?.episode_current.match(
+										: movieDetail?.item?.episode_current.match(
 												/\d+/
 												// eslint-disable-next-line no-mixed-spaces-and-tabs
 										  ) ?? 0}{' '}
 									/
-									{movieDetail?.movie?.episode_total ===
-									'Full'
+									{movieDetail?.item?.episode_total === 'Full'
 										? '1'
-										: movieDetail?.movie?.episode_total}
+										: movieDetail?.item?.episode_total}
 								</span>
 								<div className='flex items-center gap-2 my-2'>
 									<Icon
@@ -193,7 +186,7 @@ const MoviePage = () => {
 										height={16}
 									/>
 									<ul className='flex items-center gap-2'>
-										{movieDetail?.movie?.country.map(
+										{movieDetail?.item?.country.map(
 											(c, idx) => (
 												<div
 													className='hover:text-primary'
@@ -201,7 +194,7 @@ const MoviePage = () => {
 												>
 													{c.name}
 													{idx + 1 !==
-													movieDetail?.movie?.country
+													movieDetail?.item?.country
 														.length
 														? ','
 														: ''}
@@ -213,7 +206,8 @@ const MoviePage = () => {
 							</div>
 							<div
 								dangerouslySetInnerHTML={{
-									__html: movieDetail?.movie?.content
+									__html: movieDetail?.seoOnPage
+										?.descriptionHead
 								}}
 								className='text-sm'
 							/>
@@ -258,7 +252,7 @@ const MoviePage = () => {
 			{selectedEpisode && (
 				<div className='mx-auto max-w-7xl'>
 					<div className='text-sm px-5'>
-						{movieDetail?.episodes?.map(server => (
+						{movieDetail?.item?.episodes?.map(server => (
 							<ul key={server?.server_name}>
 								<p className='text-base font-bold mb-4 mt-8'>
 									{server.server_name}

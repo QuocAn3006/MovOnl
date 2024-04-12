@@ -9,17 +9,15 @@ import MovieCard from '../components/movies/MovieCard';
 const CountryMoviePage = () => {
 	const { id } = useParams();
 	const [movies, setMovies] = useState([]);
+	const [src, setSrc] = useState('');
 	const [pagination, setPanigation] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
 	const movieListRef = useRef(null);
 	const fetchMoviesType = async page => {
-		const res = await axios.get(`/v1/api/quoc-gia/${id}?page=${page}`);
+		const res = await axios.get(`/quoc-gia/${id}?page=${page}`);
 		setMovies(res?.data?.data);
-	};
-
-	const fetchPanigation = async page => {
-		const res = await axios.get(`/v1/api/quoc-gia/${id}?page=${page}`);
 		setPanigation(res?.data?.data?.params?.pagination);
+		setSrc(res?.data?.data?.APP_DOMAIN_CDN_IMAGE);
 	};
 
 	const handlePageChange = newPage => {
@@ -29,8 +27,6 @@ const CountryMoviePage = () => {
 
 	useEffect(() => {
 		fetchMoviesType(currentPage);
-
-		fetchPanigation(currentPage);
 	}, [currentPage, id]);
 	useEffect(() => {
 		if (movieListRef.current) {
@@ -57,10 +53,8 @@ const CountryMoviePage = () => {
 					{movies?.items?.map(item => (
 						<div key={item._id}>
 							<MovieCard
-								item={item}
-								pathImage={
-									'https://img.hiephanhthienha.com/uploads/movies/'
-								}
+								movies={item}
+								pathImage={src}
 							/>
 						</div>
 					))}

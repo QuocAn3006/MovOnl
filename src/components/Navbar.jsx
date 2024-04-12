@@ -131,13 +131,15 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const fetchGenres = async () => {
 		const res = await axios.get(`/the-loai`);
-		const data = res.data?.filter(item => item.slug !== 'phim-18');
+		const data = res?.data?.data?.items?.filter(
+			item => item.slug !== 'phim-18'
+		);
 		setGenresData(data);
 	};
 
 	const fetchCountry = async () => {
 		const res = await axios.get(`/quoc-gia`);
-		setCountry(res.data);
+		setCountry(res?.data?.data?.items);
 	};
 
 	useEffect(() => {

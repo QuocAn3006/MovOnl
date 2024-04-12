@@ -5,6 +5,8 @@ import MovieCard from '../components/movies/MovieCard';
 import { Icon } from '@iconify/react';
 const HomePage = () => {
 	const [movies, setMovies] = useState([]);
+	const [images, setImages] = useState([]);
+	const [src, setSrc] = useState('');
 	const [pagination, setPanigation] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
 	const movieListRef = useRef(null);
@@ -12,14 +14,12 @@ const HomePage = () => {
 		const res = await axios.get(
 			`/danh-sach/phim-moi-cap-nhat?page=${page}`
 		);
-		setMovies(res.data.items);
+		setMovies(res?.data?.data?.items);
+		setPanigation(res?.data?.pagination);
+		setSrc(res?.data?.data?.APP_DOMAIN_CDN_IMAGE);
+		setImages(res?.data?.data?.seoOnPage?.og_image);
 	};
-	const fetchPanigation = async page => {
-		const res = await axios.get(
-			`/danh-sach/phim-moi-cap-nhat?page=${page}`
-		);
-		setPanigation(res.data.pagination);
-	};
+
 	const handlePageChange = newPage => {
 		setCurrentPage(newPage);
 		fetchMovie(newPage);
@@ -27,7 +27,6 @@ const HomePage = () => {
 
 	useEffect(() => {
 		fetchMovie(currentPage);
-		fetchPanigation(currentPage);
 	}, [currentPage]);
 	useEffect(() => {
 		if (movieListRef.current) {
@@ -41,7 +40,8 @@ const HomePage = () => {
 		<>
 			<MovieCarousel
 				movies={movies}
-				pathImage={'https://img.hiephanhthienha.com/uploads/movies/'}
+				pathImage={src}
+				images={images}
 			/>
 			<div
 				className='max-w-7xl mx-auto px-5'
@@ -57,10 +57,9 @@ const HomePage = () => {
 					{movies?.map(item => (
 						<div key={item._id}>
 							<MovieCard
-								item={item}
-								pathImage={
-									'https://img.hiephanhthienha.com/uploads/movies/'
-								}
+								images={images}
+								movies={item}
+								pathImage={src}
 							/>
 						</div>
 					))}

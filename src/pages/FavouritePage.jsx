@@ -20,7 +20,6 @@ const FavouritePage = () => {
 			dispatch(removeFavMovies({ favMovie: movieData }));
 		}
 	};
-	console.log(favMovies);
 	useEffect(() => {
 		setMovies(favMovies);
 	}, [favMovies]);

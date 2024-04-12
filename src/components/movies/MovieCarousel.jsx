@@ -6,8 +6,16 @@ import Image from '../Image';
 import { useNavigate } from 'react-router-dom';
 const MovieCarousel = props => {
 	// eslint-disable-next-line react/prop-types
-	const { movies, pathImage } = props;
+	const { pathImage, movies, images } = props;
 	const navigate = useNavigate();
+
+	const newImages = images.slice(0, 6).map(item => {
+		return item.substring(item.lastIndexOf('/') + 1);
+	});
+
+	const newMovies = movies
+		.slice(0, 6)
+		.filter(item => newImages.includes(item.thumb_url));
 	return (
 		<Swiper
 			modules={[EffectFade, Autoplay]}
@@ -20,24 +28,22 @@ const MovieCarousel = props => {
 		>
 			{
 				// eslint-disable-next-line react/prop-types
-				movies?.slice(0, 6)?.map(item => (
-					<SwiperSlide key={item?._id}>
+				newMovies?.map((item, idx) => (
+					<SwiperSlide key={idx}>
 						<div
 							className='bg-cover min-h-screen w-full relative bg-center max-h-[800px] lg:min-h-0 lg:aspect-video bg-black'
 							style={{
-								backgroundImage: `url(${
-									pathImage + item?.thumb_url
-								})`
+								backgroundImage: `url(${pathImage}/uploads/movies/${item?.thumb_url})`
 							}}
 						>
 							<div className='absolute inset-0 bg-black/80 md:bg-black/90 flex items-center'>
 								<div className='w-full max-w-7xl px-4 mx-auto flex items-center justify-between gap-8'>
 									<div>
 										<h2 className='text-4xl lg:text-5xl font-extrabold leading-snug'>
-											{item.name}
+											{item?.name}
 										</h2>
 										<h3 className='text-primary font-bold md:text-lg'>
-											{item.origin_name}
+											{item?.origin_name}
 										</h3>
 										<div className='font-medium flex flex-col gap-2.5 my-5 lg:my-10 lg:gap-5 lg:items-center lg:flex-row'>
 											<div className='flex items-center gap-2 text-xs font-bold'>
@@ -59,7 +65,7 @@ const MovieCarousel = props => {
 										</div>
 										<div
 											onClick={() =>
-												navigate(`/movie/${item.slug}`)
+												navigate(`/movie/${item?.slug}`)
 											}
 											className='cursor-pointer border-2 gap-2 border-primary flex items-center px-8 py-4 rounded-full w-max hover:bg-primary duration-150 hover:text-black'
 										>
@@ -72,9 +78,10 @@ const MovieCarousel = props => {
 											</span>
 										</div>
 									</div>
+
 									<Image
-										src={pathImage + item?.thumb_url}
-										alt={item.origin_name}
+										src={`${pathImage}/uploads/movies/${item?.thumb_url}`}
+										alt={item}
 										className='hidden aspect-[2/3] w-full max-w-[320px] rounded-lg border-[14px] border-primary md:block'
 										width={320}
 										height={480}

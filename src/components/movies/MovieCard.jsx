@@ -6,12 +6,11 @@ import { addFavMovies, removeFavMovies } from '../../redux/slide/favMovieSlide';
 import { Icon } from '@iconify/react';
 
 const MovieCard = props => {
-	const { item, pathImage } = props;
+	const { pathImage, movies } = props;
 	const dispatch = useDispatch();
+
 	const favMovies = useSelector(state => state.favMovies.favMovies);
-
-	const isFavorite = favMovies.some(m => m.slug === item.slug);
-
+	const isFavorite = favMovies.some(m => m.slug === movies.slug);
 	const navigate = useNavigate();
 	const handleNavigate = id => {
 		navigate(`/movie/${id}`);
@@ -19,9 +18,9 @@ const MovieCard = props => {
 
 	const handleFavorite = type => {
 		const movieData = {
-			slug: item.slug,
-			name: item.name,
-			thumb_url: pathImage + item.thumb_url
+			slug: movies.slug,
+			name: movies.name,
+			thumb_url: `${pathImage}/uploads/movies/${movies?.thumb_url}`
 		};
 		switch (type) {
 			case 'ADD':
@@ -49,13 +48,10 @@ const MovieCard = props => {
 					<span className='absolute top-2.5 left-2.5 rounded z-20 px-2.5 py-0.5 text-xs text-black bg-primary font-bold'>
 						0/1
 					</span>
+
 					<Image
-						src={
-							item.thumb_url
-								? pathImage + item.thumb_url
-								: pathImage + item.poster_url
-						}
-						alt={item.origin_name}
+						src={`${pathImage}/uploads/movies/${movies?.thumb_url}`}
+						alt={movies}
 						className='aspect-[2/3]'
 					/>
 
@@ -69,7 +65,7 @@ const MovieCard = props => {
 							{isFavorite ? 'Bỏ Thích' : 'Yêu Thích'}
 						</button>
 						<div
-							onClick={() => handleNavigate(item.slug)}
+							onClick={() => handleNavigate(movies.slug)}
 							className='rounded-full border-2 bg- border-primary w-36 px-6 py-2.5 bg-black/70 translate-y-3 group-hover:translate-y-0 duration-300 hover:bg-primary hover:text-black'
 						>
 							Chi tiết
@@ -80,17 +76,17 @@ const MovieCard = props => {
 				<h3 className='flex items-center justify-between my-1.5 gap-5 md:my-3'>
 					<div
 						className='hover:text-primary duration-150 text-lg font-bold truncate'
-						onClick={() => handleNavigate(item.slug)}
+						onClick={() => handleNavigate(movies.slug)}
 					>
 						<abbr
-							title={item.name}
+							title={movies.name}
 							className='no-underline'
 						>
-							{item.name}
+							{movies.name}
 						</abbr>
 					</div>
 					<span className='text-primary text-sm font-medium hidden md:block'>
-						{item.year}
+						{movies.year}
 					</span>
 				</h3>
 

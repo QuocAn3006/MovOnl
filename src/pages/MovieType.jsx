@@ -11,21 +11,15 @@ const MovieType = () => {
 	const { id } = useParams();
 	const type = movieTypes.find(t => t.path === id);
 	const [movies, setMovies] = useState([]);
+	const [src, setSrc] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pagination, setPanigation] = useState({});
 	const movieListRef = useRef(null);
 
 	const fetchMoviesType = async page => {
-		const res = await axios.get(
-			`/v1/api/danh-sach/${type.path}?page=${page}`
-		);
+		const res = await axios.get(`/danh-sach/${type.path}?page=${page}`);
+		setSrc(res?.data?.data?.APP_DOMAIN_CDN_IMAGE);
 		setMovies(res?.data?.data.items);
-	};
-
-	const fetchPanigation = async page => {
-		const res = await axios.get(
-			`/v1/api/danh-sach/${type.path}?page=${page}`
-		);
 		setPanigation(res?.data?.data?.params);
 	};
 
@@ -36,8 +30,6 @@ const MovieType = () => {
 
 	useEffect(() => {
 		fetchMoviesType(currentPage);
-
-		fetchPanigation(currentPage);
 	}, [currentPage, type]);
 	useEffect(() => {
 		if (movieListRef.current) {
@@ -48,7 +40,6 @@ const MovieType = () => {
 		}
 	}, [currentPage, type]);
 	if (!type) return <NotFoundPage />;
-	console.log(pagination);
 	return (
 		<>
 			<div className='pt-20'></div>
@@ -64,10 +55,8 @@ const MovieType = () => {
 					{movies?.map(item => (
 						<div key={item._id}>
 							<MovieCard
-								item={item}
-								pathImage={
-									'https://img.hiephanhthienha.com/uploads/movies/'
-								}
+								movies={item}
+								pathImage={src}
 							/>
 						</div>
 					))}
