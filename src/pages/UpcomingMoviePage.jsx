@@ -1,24 +1,19 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import MovieCarousel from '../components/movies/MovieCarousel';
 import MovieCard from '../components/movies/MovieCard';
 import { Icon } from '@iconify/react';
-const HomePage = () => {
+
+const UpcomingMoviePage = () => {
 	const [movies, setMovies] = useState([]);
-	const [pagination, setPanigation] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
+
 	const movieListRef = useRef(null);
 	const fetchMovie = async page => {
 		const res = await axios.get(
-			`/danh-sach/phim-moi-cap-nhat?page=${page}`
+			`v1/api/danh-sach/phim-sap-chieu?page=${page}`
 		);
-		setMovies(res.data.items);
-	};
-	const fetchPanigation = async page => {
-		const res = await axios.get(
-			`/danh-sach/phim-moi-cap-nhat?page=${page}`
-		);
-		setPanigation(res.data.pagination);
+
+		setMovies(res.data);
 	};
 	const handlePageChange = newPage => {
 		setCurrentPage(newPage);
@@ -26,15 +21,7 @@ const HomePage = () => {
 	};
 
 	useEffect(() => {
-		Promise.all([
-			(async () => {
-				return await fetchMovie(currentPage);
-			})(),
-
-			(async () => {
-				return await fetchPanigation(currentPage);
-			})()
-		]);
+		fetchMovie(currentPage);
 	}, [currentPage]);
 	useEffect(() => {
 		if (movieListRef.current) {
@@ -46,22 +33,17 @@ const HomePage = () => {
 	}, [currentPage]);
 	return (
 		<>
-			<MovieCarousel
-				movies={movies}
-				pathImage={'https://img.hiephanhthienha.com/uploads/movies/'}
-			/>
+			<div className='pt-20'></div>
 			<div
-				className='max-w-7xl mx-auto px-5'
+				className='mx-auto max-w-7xl px-5'
 				ref={movieListRef}
 			>
-				<div className='mb-6 mt-12'>
-					<h3 className='text-2xl md:text-3xl font-extrabold'>
-						Danh sách phim mới
-					</h3>
-				</div>
+				<h2 className='capitalize text-3xl font-bold mb-6 md:text-4xl'>
+					{movies?.data?.titlePage}
+				</h2>
 
 				<div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'>
-					{movies?.map(item => (
+					{movies?.data?.items?.map(item => (
 						<div key={item._id}>
 							<MovieCard
 								item={item}
@@ -73,7 +55,6 @@ const HomePage = () => {
 					))}
 				</div>
 			</div>
-
 			<ul className='flex mt-20 font-medium justify-center cursor-pointer'>
 				{currentPage !== 1 && (
 					<div
@@ -94,23 +75,28 @@ const HomePage = () => {
 							className='flex'
 							key={idx}
 						>
-							{page > 0 && page <= pagination?.totalPages && (
-								<div
-									onClick={() => handlePageChange(page)}
-									className={`px-4 py-1.5 border border-r-0 border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary ${
-										pagination?.currentPage === page
-											? 'bg-primary text-black border-primary'
-											: ''
-									}`}
-								>
-									{page}
-								</div>
-							)}
+							{page > 0 &&
+								page <=
+									movies?.data?.params?.pagination
+										?.totalItems && (
+									<div
+										onClick={() => handlePageChange(page)}
+										className={`px-4 py-1.5 border border-r-0 border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary ${
+											movies?.data?.params?.pagination
+												.currentPage === page
+												? 'bg-primary text-black border-primary'
+												: ''
+										}`}
+									>
+										{page}
+									</div>
+								)}
 						</div>
 					);
 				})}
 
-				{pagination?.currentPage !== pagination?.totalPages && (
+				{movies?.data?.params?.pagination?.currentPage !==
+					movies?.pagination?.totalPages && (
 					<div
 						onClick={() => handlePageChange(currentPage + 1)}
 						className='px-2 py-1.5 items-center justify-center text-white border border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary'
@@ -126,4 +112,4 @@ const HomePage = () => {
 	);
 };
 
-export default HomePage;
+export default UpcomingMoviePage;

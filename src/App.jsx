@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { routes } from './routes/index';
 import { Fragment } from 'react';
 import axios from 'axios';

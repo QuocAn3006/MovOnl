@@ -8,12 +8,15 @@ import { Icon } from '@iconify/react';
 import Safe from 'react-safe';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavMovies, removeFavMovies } from '../redux/slide/favMovieSlide';
+import LoadingBar from 'react-top-loading-bar';
 
 const MoviePage = () => {
 	const { id } = useParams();
 	const [src, setSrc] = useState('');
 	const [selectedEpisode, setSelectedEpisode] = useState({});
 	const [serverType, setServerType] = useState('art-player');
+	const [progress, setProgress] = useState(0);
+
 	const iframeRef = useRef(null);
 	const dispatch = useDispatch();
 	const favMovies = useSelector(state => state.favMovies.favMovies);
@@ -47,7 +50,9 @@ const MoviePage = () => {
 	};
 
 	useEffect(() => {
+		setProgress(0);
 		fetchDetailMovie();
+		setProgress(100);
 	}, [id]);
 	useEffect(() => {
 		setSrc(
@@ -72,6 +77,12 @@ const MoviePage = () => {
 	}, [serverType]);
 	return (
 		<>
+			<LoadingBar
+				progress={progress}
+				height={3}
+				color='#e4d804'
+				onLoaderFinished={() => setProgress(0)}
+			></LoadingBar>
 			<div
 				className='bg-cover w-full aspect-video relative bg-center lg:max-h-[800px]'
 				style={{

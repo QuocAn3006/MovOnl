@@ -6,9 +6,8 @@ import Image from '../Image';
 import { useNavigate } from 'react-router-dom';
 const MovieCarousel = props => {
 	// eslint-disable-next-line react/prop-types
-	const { movies } = props;
+	const { movies, pathImage } = props;
 	const navigate = useNavigate();
-
 	return (
 		<Swiper
 			modules={[EffectFade, Autoplay]}
@@ -21,18 +20,14 @@ const MovieCarousel = props => {
 		>
 			{
 				// eslint-disable-next-line react/prop-types
-				movies?.items?.slice(0, 6)?.map(item => (
+				movies?.slice(0, 6)?.map(item => (
 					<SwiperSlide key={item?._id}>
 						<div
 							className='bg-cover min-h-screen w-full relative bg-center max-h-[800px] lg:min-h-0 lg:aspect-video bg-black'
 							style={{
 								backgroundImage: `url(${
-									// eslint-disable-next-line react/prop-types
-									movies?.pathImage + item.thumb_url ||
-									import.meta.env.VITE_CDN_IMAGE +
-										item.thumb_url
-								}
-							)`
+									pathImage + item?.thumb_url
+								})`
 							}}
 						>
 							<div className='absolute inset-0 bg-black/80 md:bg-black/90 flex items-center'>
@@ -78,12 +73,7 @@ const MovieCarousel = props => {
 										</div>
 									</div>
 									<Image
-										src={`${
-											movies?.pathImage +
-												item.thumb_url ||
-											import.meta.env.VITE_CDN_IMAGE +
-												item.thumb_url
-										}`}
+										src={pathImage + item?.thumb_url}
 										alt={item.origin_name}
 										className='hidden aspect-[2/3] w-full max-w-[320px] rounded-lg border-[14px] border-primary md:block'
 										width={320}

@@ -1,41 +1,42 @@
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import MovieCarousel from '../components/movies/MovieCarousel';
-import MovieCard from '../components/movies/MovieCard';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import NotFoundPage from './NotFoundPage';
 import { Icon } from '@iconify/react';
-const HomePage = () => {
+import MovieCard from '../components/movies/MovieCard';
+
+const CountryMoviePage = () => {
+	const { id } = useParams();
 	const [movies, setMovies] = useState([]);
 	const [pagination, setPanigation] = useState({});
 	const [currentPage, setCurrentPage] = useState(1);
 	const movieListRef = useRef(null);
-	const fetchMovie = async page => {
-		const res = await axios.get(
-			`/danh-sach/phim-moi-cap-nhat?page=${page}`
-		);
-		setMovies(res.data.items);
+	const fetchMoviesType = async page => {
+		const res = await axios.get(`/v1/api/quoc-gia/${id}?page=${page}`);
+		setMovies(res?.data?.data);
 	};
+
 	const fetchPanigation = async page => {
-		const res = await axios.get(
-			`/danh-sach/phim-moi-cap-nhat?page=${page}`
-		);
-		setPanigation(res.data.pagination);
+		const res = await axios.get(`/v1/api/quoc-gia/${id}?page=${page}`);
+		setPanigation(res?.data?.data?.params?.pagination);
 	};
+
 	const handlePageChange = newPage => {
 		setCurrentPage(newPage);
-		fetchMovie(newPage);
+		fetchMoviesType(newPage);
 	};
 
 	useEffect(() => {
 		Promise.all([
 			(async () => {
-				return await fetchMovie(currentPage);
+				return await fetchMoviesType(currentPage);
 			})(),
 
 			(async () => {
 				return await fetchPanigation(currentPage);
 			})()
 		]);
-	}, [currentPage]);
+	}, [currentPage, id]);
 	useEffect(() => {
 		if (movieListRef.current) {
 			movieListRef.current.scrollIntoView({
@@ -43,25 +44,22 @@ const HomePage = () => {
 				block: 'start'
 			});
 		}
-	}, [currentPage]);
+	}, [currentPage, id]);
+	if (!id) return <NotFoundPage />;
+
 	return (
 		<>
-			<MovieCarousel
-				movies={movies}
-				pathImage={'https://img.hiephanhthienha.com/uploads/movies/'}
-			/>
+			<div className='pt-20'></div>
 			<div
-				className='max-w-7xl mx-auto px-5'
+				className='mx-auto max-w-7xl px-5'
 				ref={movieListRef}
 			>
-				<div className='mb-6 mt-12'>
-					<h3 className='text-2xl md:text-3xl font-extrabold'>
-						Danh sách phim mới
-					</h3>
-				</div>
+				<h2 className='capitalize text-3xl font-bold mb-6 md:text-4xl'>
+					Phim {movies?.titlePage}
+				</h2>
 
 				<div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'>
-					{movies?.map(item => (
+					{movies?.items?.map(item => (
 						<div key={item._id}>
 							<MovieCard
 								item={item}
@@ -73,7 +71,6 @@ const HomePage = () => {
 					))}
 				</div>
 			</div>
-
 			<ul className='flex mt-20 font-medium justify-center cursor-pointer'>
 				{currentPage !== 1 && (
 					<div
@@ -94,7 +91,7 @@ const HomePage = () => {
 							className='flex'
 							key={idx}
 						>
-							{page > 0 && page <= pagination?.totalPages && (
+							{page > 0 && page <= pagination?.totalItems && (
 								<div
 									onClick={() => handlePageChange(page)}
 									className={`px-4 py-1.5 border border-r-0 border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary ${
@@ -126,4 +123,4 @@ const HomePage = () => {
 	);
 };
 
-export default HomePage;
+export default CountryMoviePage;

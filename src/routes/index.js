@@ -2,6 +2,10 @@ import HomePage from '../pages/HomePage';
 import NotFoundPage from '../pages/NotFoundPage';
 import MoviePage from '../pages/MoviePage';
 import FavouritePage from '../pages/FavouritePage';
+import MovieType from '../pages/MovieType';
+import GenresMoviePage from '../pages/GenresMoviePage';
+import CountryMoviePage from '../pages/CountryMoviePage';
+import UpcomingMoviePage from '../pages/UpcomingMoviePage';
 
 export const routes = [
 	{
@@ -19,16 +23,24 @@ export const routes = [
 		page: FavouritePage
 	},
 
+	{
+		path: '/loai-phim/:id',
+		page: MovieType
+	},
+	{
+		path: '/the-loai/:id',
+		page: GenresMoviePage
+	},
+
+	{
+		path: '/quoc-gia/:id',
+		page: CountryMoviePage
+	},
+
+	{
+		path: '/phim-sap-chieu',
+		page: UpcomingMoviePage
+	},
+
 	{ path: '*', page: NotFoundPage }
-	// { title: 'Phim mới', path: 'phim-moi' },
-	// { title: 'Phim bộ', path: 'phim-bo' },
-	// { title: 'Phim lẻ', path: 'phim-le' },
-	// { title: 'Phim Vietsub', path: 'phim-vietsub' },
-	// { title: 'Phim thuyết minh', path: 'phim-thuyet-minh' },
-	// { title: 'Phim lồng tiếng', path: 'phim-long-tieng' },
-	// { title: 'Phim hoàn thành', path: 'phim-bo-hoan-thanh' },
-	// { title: 'Phim đang chiếu', path: 'phim-bo-dang-chieu' },
-	// { title: 'Phim độc quyền', path: 'subteam' },
-	// { title: 'Phim hoạt hình', path: 'hoat-hinh' },
-	// { title: 'Tìm kiếm', path: 'tim-kiem' }
 ];

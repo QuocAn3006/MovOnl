@@ -154,6 +154,21 @@ const Navbar = () => {
 		fetchGenres();
 		fetchCountry();
 	}, []);
+
+	const handleNavigateType = id => {
+		navigate(`/loai-phim/${id}`);
+	};
+
+	const handleNavigateGenres = id => {
+		navigate(`/the-loai/${id}`);
+	};
+
+	const handleNavigateCountry = id => {
+		navigate(`/quoc-gia/${id}`);
+	};
+	const handleNavigateUpcoming = () => {
+		navigate(`/phim-sap-chieu`);
+	};
 	return (
 		<header
 			className={`${
@@ -183,6 +198,9 @@ const Navbar = () => {
 								<li
 									key={item.title}
 									className='hover:text-primary duration-100'
+									onClick={() =>
+										handleNavigateType(item.path)
+									}
 								>
 									{item.title}
 								</li>
@@ -192,11 +210,14 @@ const Navbar = () => {
 
 					<span className='relative group hover:text-primary cursor-pointer'>
 						Thể loại
-						<ul className='dropdown-menu grid-cols-2 '>
+						<ul className='dropdown-menu grid-cols-3 '>
 							{genresData?.map(item => (
 								<li
 									key={item._id}
 									className='hover:text-primary duration-100'
+									onClick={() =>
+										handleNavigateGenres(item.slug)
+									}
 								>
 									{item.name}
 								</li>
@@ -206,11 +227,14 @@ const Navbar = () => {
 
 					<span className='relative group hover:text-primary cursor-pointer'>
 						Quốc gia
-						<ul className='dropdown-menu grid-cols-2 '>
+						<ul className='dropdown-menu grid-cols-4 '>
 							{country.map(item => (
 								<li
 									key={item._id}
 									className='hover:text-primary duration-100'
+									onClick={() =>
+										handleNavigateCountry(item.slug)
+									}
 								>
 									{item.name}
 								</li>
@@ -218,7 +242,10 @@ const Navbar = () => {
 						</ul>
 					</span>
 
-					<span className='relative group hover:text-primary cursor-pointer'>
+					<span
+						className='relative group hover:text-primary cursor-pointer'
+						onClick={handleNavigateUpcoming}
+					>
 						Sắp chiếu
 					</span>
 				</div>
