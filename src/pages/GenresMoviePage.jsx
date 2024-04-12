@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -29,15 +30,9 @@ const GenresMoviePage = () => {
 	};
 
 	useEffect(() => {
-		Promise.all([
-			(async () => {
-				return await fetchMoviesType(currentPage);
-			})(),
+		fetchMoviesType(currentPage);
 
-			(async () => {
-				return await fetchPanigation(currentPage);
-			})()
-		]);
+		fetchPanigation(currentPage);
 	}, [currentPage, id]);
 	useEffect(() => {
 		if (movieListRef.current) {

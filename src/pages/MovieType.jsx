@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { movieTypes } from '../constants/index';
 import { useParams } from 'react-router-dom';
 import NotFoundPage from './NotFoundPage';
@@ -34,15 +35,9 @@ const MovieType = () => {
 	};
 
 	useEffect(() => {
-		Promise.all([
-			(async () => {
-				return await fetchMoviesType(currentPage);
-			})(),
+		fetchMoviesType(currentPage);
 
-			(async () => {
-				return await fetchPanigation(currentPage);
-			})()
-		]);
+		fetchPanigation(currentPage);
 	}, [currentPage, type]);
 	useEffect(() => {
 		if (movieListRef.current) {

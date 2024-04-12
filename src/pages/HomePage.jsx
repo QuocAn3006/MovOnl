@@ -26,15 +26,8 @@ const HomePage = () => {
 	};
 
 	useEffect(() => {
-		Promise.all([
-			(async () => {
-				return await fetchMovie(currentPage);
-			})(),
-
-			(async () => {
-				return await fetchPanigation(currentPage);
-			})()
-		]);
+		fetchMovie(currentPage);
+		fetchPanigation(currentPage);
 	}, [currentPage]);
 	useEffect(() => {
 		if (movieListRef.current) {
