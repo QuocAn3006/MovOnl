@@ -272,8 +272,8 @@ const Navbar = () => {
 
 					{/* mobile */}
 					<MobileMenu
-						country={[...country]}
-						genresData={[...genresData]}
+						country={country}
+						genresData={genresData}
 					/>
 				</div>
 			</nav>
