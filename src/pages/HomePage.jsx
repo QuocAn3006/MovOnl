@@ -15,7 +15,7 @@ const HomePage = () => {
 			`/danh-sach/phim-moi-cap-nhat?page=${page}`
 		);
 		setMovies(res?.data?.data?.items);
-		setPanigation(res?.data?.pagination);
+		setPanigation(res?.data?.data?.params?.pagination);
 		setSrc(res?.data?.data?.APP_DOMAIN_CDN_IMAGE);
 		setImages(res?.data?.data?.seoOnPage?.og_image);
 	};
@@ -86,7 +86,7 @@ const HomePage = () => {
 							className='flex'
 							key={idx}
 						>
-							{page > 0 && page <= pagination?.totalPages && (
+							{page > 0 && page <= pagination?.totalItems && (
 								<div
 									onClick={() => handlePageChange(page)}
 									className={`px-4 py-1.5 border border-r-0 border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary ${
@@ -102,7 +102,7 @@ const HomePage = () => {
 					);
 				})}
 
-				{pagination?.currentPage !== pagination?.totalPages && (
+				{pagination?.currentPage !== pagination?.totalItems && (
 					<div
 						onClick={() => handlePageChange(currentPage + 1)}
 						className='px-2 py-1.5 items-center justify-center text-white border border-collapse duration-300 hover:bg-primary hover:text-black hover:border-primary'
