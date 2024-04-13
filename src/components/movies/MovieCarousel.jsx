@@ -9,13 +9,13 @@ const MovieCarousel = props => {
 	const { pathImage, movies, images } = props;
 	const navigate = useNavigate();
 
-	const newImages = images.slice(0, 6).map(item => {
-		return item.substring(item.lastIndexOf('/') + 1);
+	const newImages = images?.slice(0, 6)?.map(item => {
+		return item?.substring(item.lastIndexOf('/') + 1);
 	});
 
 	const newMovies = movies
-		.slice(0, 6)
-		.filter(item => newImages.includes(item.thumb_url));
+		?.slice(0, 6)
+		?.filter(item => newImages?.includes(item.thumb_url));
 	return (
 		<Swiper
 			modules={[EffectFade, Autoplay]}
