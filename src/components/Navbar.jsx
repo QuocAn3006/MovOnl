@@ -95,7 +95,7 @@ const MobileMenu = props => {
 										))}
 									{menuType === 'genres' &&
 										// eslint-disable-next-line react/prop-types
-										genresData.map(item => (
+										genresData?.map(item => (
 											<li
 												key={item._id}
 												className='hover:text-primary duration-100'
@@ -230,7 +230,7 @@ const Navbar = () => {
 					<span className='relative group hover:text-primary cursor-pointer'>
 						Quốc gia
 						<ul className='dropdown-menu grid-cols-4 '>
-							{country.map(item => (
+							{country?.map(item => (
 								<li
 									key={item._id}
 									className='hover:text-primary duration-100'
