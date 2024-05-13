@@ -126,6 +126,8 @@ const MobileMenu = props => {
 
 const Navbar = () => {
 	const [displayBgColor, setDisplayBgColor] = useState(false);
+	const [search, setSearch] = useState('');
+	const [showModal, setShowModal] = useState(false);
 	const [genresData, setGenresData] = useState([]);
 	const [country, setCountry] = useState([]);
 	const navigate = useNavigate();
@@ -170,6 +172,16 @@ const Navbar = () => {
 	};
 	const handleNavigateUpcoming = () => {
 		navigate(`/phim-sap-chieu`);
+	};
+	const handleKeyDown = e => {
+		if (e.key === 'Enter') {
+			handleNavigateToSearch();
+		}
+	};
+	const handleNavigateToSearch = () => {
+		if (search.trim() !== '') {
+			window.location.href = `/tim-kiem?q=${encodeURIComponent(search)}`;
+		}
 	};
 	return (
 		<header
@@ -253,13 +265,15 @@ const Navbar = () => {
 				</div>
 
 				<div className='flex items-center gap-5 cursor-pointer'>
-					<abbr title='Tìm kiếm'>
-						<Icon
-							icon='iconamoon:search-bold'
-							className='text-primary cursor-pointer'
-							height={24}
-						/>
-					</abbr>
+					<div onClick={() => setShowModal(true)}>
+						<abbr title='Tìm kiếm'>
+							<Icon
+								icon='iconamoon:search-bold'
+								className='text-primary cursor-pointer'
+								height={24}
+							/>
+						</abbr>
+					</div>
 
 					<div onClick={() => navigate('/favourite')}>
 						<abbr title='Yêu thích'>
@@ -277,6 +291,39 @@ const Navbar = () => {
 					/>
 				</div>
 			</nav>
+
+			{showModal ? (
+				<>
+					<div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
+						<div className='relative w-[500px] my-6 mx-auto max-w-3xl'>
+							{/*content*/}
+							<div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-[#020103] text-white outline-none focus:outline-none'>
+								{/*header*/}
+								<div className='flex items-end justify-end p-5 border-b border-solid border-blueGray-200 rounded-t'>
+									<button onClick={() => setShowModal(false)}>
+										<span className=' text-white h-6 w-6 text-2xl block outline-none focus:outline-none'>
+											x
+										</span>
+									</button>
+								</div>
+								{/*body*/}
+								<div className='relative p-4 flex-auto mb-6'>
+									<input
+										type='text'
+										className='border-b-2 border-white/10 bg-transparent outline-none w-full px-0.5 py-3'
+										placeholder='tìm kiếm phim'
+										value={search}
+										onChange={e =>
+											setSearch(e.target.value)
+										}
+										onKeyDown={handleKeyDown}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</>
+			) : null}
 		</header>
 	);
 };

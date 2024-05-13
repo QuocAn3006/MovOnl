@@ -6,6 +6,7 @@ import MovieType from '../pages/MovieType';
 import GenresMoviePage from '../pages/GenresMoviePage';
 import CountryMoviePage from '../pages/CountryMoviePage';
 import UpcomingMoviePage from '../pages/UpcomingMoviePage';
+import FindMovie from '../pages/FindMovie';
 
 export const routes = [
 	{
@@ -40,6 +41,11 @@ export const routes = [
 	{
 		path: '/phim-sap-chieu',
 		page: UpcomingMoviePage
+	},
+
+	{
+		path: '/tim-kiem',
+		page: FindMovie
 	},
 
 	{ path: '*', page: NotFoundPage }
